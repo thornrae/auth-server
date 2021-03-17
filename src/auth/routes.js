@@ -10,6 +10,7 @@ const bearerAuth = require('./middleware/bearer.js')
 authRouter.post('/signup', async (req, res, next) => {
   try {
     let user = new User(req.body);
+
     const userRecord = await user.save();
     const output = {
       user: userRecord,
@@ -22,20 +23,27 @@ authRouter.post('/signup', async (req, res, next) => {
 });
 
 authRouter.post('/signin', basicAuth, (req, res, next) => {
+  // console.log('prefinal..', req)
   const user = {
-    user: request.user,
-    token: request.user.token
+    user: req.user,
+    token: req.user.token
   };
+  // console.log('final user..', user);
   res.status(200).json(user);
 });
 
-authRouter.get('/users', bearerAuth, async (req, res, next) => {
-  const users = await User.find({});
-  const list = users.map(user => user.username);
-  res.status(200).json(list);
+authRouter.post('/users', bearerAuth, async (req, res, next) => {
+  // const users = await User.find({});
+  // const list = users.map(user => user.username);
+  const users = { 
+    user: req.user,
+    token: req.token
+  }
+  // console.log('users..', users);
+  res.status(200).json(users);
 });
 
-authRouter.get('/secret', bearerAuth, async (req, res, next) => {
+authRouter.post('/secret', bearerAuth, async (req, res, next) => {
   res.status(200).send("Welcome to the secret area!")
 });
 
