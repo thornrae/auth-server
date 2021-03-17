@@ -21,7 +21,9 @@ users.virtual('token').get(function () {
 
 users.pre('save', async function () {
   if (this.isModified('password')) {
-    this.password = bcrypt.hash(this.password, 10);
+    // console.log('prehash password', this.password)
+    this.password = await bcrypt.hash(this.password, 10);
+    // console.log('posthash password', this.password);
   }
 });
 
@@ -29,6 +31,7 @@ users.pre('save', async function () {
 users.statics.authenticateBasic = async function (username, password) {
   const user = await this.findOne({ username })
   // console.log('basic auth user...', user);
+  // console.log(user.password, password);
   const valid = await bcrypt.compare(password, user.password)
   // console.log('valid..', valid)
   if (valid) { return user; }
