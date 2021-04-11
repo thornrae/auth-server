@@ -7,8 +7,6 @@ require('dotenv').config();
 
 // require('./src/server.js').start(process.env.PORT);
 
-
-
 const options = {
   useNewUrlParser: true,
   useCreateIndex: true,
